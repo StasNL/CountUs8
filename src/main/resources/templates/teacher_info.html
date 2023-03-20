@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>[[${pageTitle}]]</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+</head>
+<body>
+<div class="container-fluid mt-5">
+    <div class="text-center"><h3>[[${pageTitle}]]</h3></div>
+
+    <form class="mt-3" th:object="${clazz}"
+          style="max-width: 500px; margin: 0 auto;">
+        <div class="border border-secondary rounded p-3">
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" th:for="mnemocode">Класс</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="mnemocode" th:field="*{mnemocode}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" th:for="surname">Фамилия</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="surname" th:field="*{teacher.surname}">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" th:for="name">Имя</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="name" th:field="*{teacher.name}">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" th:for="patronymic">Отчество</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="patronymic"
+                           th:field="*{teacher.patronymic}">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" th:for="birthYear">Год рождения</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="birthYear"
+                           th:field="*{teacher.birthYear}">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" th:for="gender">Пол</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="gender"
+                           th:field="*{teacher.gender}">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" th:for="mainSubject">Основной предмет</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly class="form-control-plaintext" id="mainSubject"
+                           th:field="*{teacher.mainSubject}">
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a th:href="@{/classes}" class="btn btn-secondary">К списку классов</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

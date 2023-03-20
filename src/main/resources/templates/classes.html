@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список учеников</title>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}" type="text/css">
+</head>
+<body>
+<div class="container-fluid text-center">
+    <h2>Список классов</h2>
+    <div class="text-left ml-2">
+        <a class="btn btn-info text-white" onclick="history.back(); return false;">Назад</a>
+        <a class="btn btn-info text-white" th:href="@{'/'}">На главную</a>
+    </div>
+    <div class="my-2 row align-items-center">
+        <div class="col-m offset-md-5">
+            <a th:if="${studentIdToAdd == null && teacherIdToAdd == null}" class="h3 btn btn-dark btn-lg "
+               th:href="@{/classes/new}">
+                Добавить класс
+            </a>
+        </div>
+        <div class="col-m offset-md-3">
+            <form th:action="@{/classes}">
+                <input type="submit" value="Старт">
+                &nbsp;
+                <input type="text" name="filter" placeholder="Поиск">
+
+            </form>
+        </div>
+    </div>
+    <div th:if="${message}" class="alert alert-success">
+        [[${message}]]
+    </div>
+    <div>
+        <table class="table table-bordered table-sm text-center">
+            <thead class="thead-dark">
+            <tr>
+                <th>
+                    <a th:href="@{'/classes' + '?sortBy=studyYear&sortDir=' + ${reverseSortDir}
+                    + '&prevSort=' + ${prevSort} + ${filter != null ? '&filter=' + filter : ''}}"
+                       class="btn btn-dark btn-block">
+                        Год обучения
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{'/classes' + '?sortBy=mnemocode&sortDir=' + ${reverseSortDir}
+                    + '&prevSort=' + ${prevSort} + ${filter != null ? '&filter=' + filter : ''}}"
+                       class="btn btn-dark btn-block">
+                        Мнемокод
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{'/classes' + '?sortBy=teacher&sortDir=' + ${reverseSortDir}
+                    + '&prevSort=' + ${prevSort} + ${filter != null ? '&filter=' + filter : ''}}"
+                       class="btn btn-dark btn-block">
+                        Классный руководитель
+                    </a>
+                </th>
+                <th>Ученики</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="classDto : ${classes}">
+                <tr>
+                    <td th:width="200"> [[${classDto.studyYear}]]</td>
+                    <td th:width="200">[[${classDto.mnemocode}]]</td>
+                    <td th:width="400">
+                        <a class="h7 text-dark" th:if="${classDto.teacher != 'Не назначен'}" th:href="@{'/classes/teacher?classId='
+                        + ${classDto.id}}">
+                            [[${classDto.teacher}]]
+                        </a>
+                        <div th:if="${classDto.teacher == 'Не назначен'}">
+                            [[${classDto.teacher}]]
+                        </div>
+                    </td>
+                    <td th:width="200">
+                        <a class="h7 text-dark" th:href="@{'/students?classId=' + ${classDto.id}}">Список учеников</a>
+                    </td>
+                    <td th:width="200">
+                        <div th:if="${studentIdToAdd == null && teacherIdToAdd == null}" class="dropdown">
+                            <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown">
+                                Меню
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item"
+                                   th:href="@{${studentIdToAdd == null ? '/students?classIdToAdd=' + classDto.id
+                                   : '/classes/add_student/' + studentIdToAdd + '?classIdToAdd=' + classDto.id}}">
+                                    Добавить ученика
+                                </a>
+                                <a class="dropdown-item"
+                                   th:href="@{${teacherIdToAdd == null ? '/teachers?classIdToAdd=' + classDto.id
+                                   : 'classes/add_teacher/' + teacherIdToAdd + '?classIdToAdd=' + classDto.id}}">
+                                    Добавить/заменить учителя
+                                </a>
+                                <a class="dropdown-item" th:href="@{'/classes/duplicate/' + ${classDto.id}}">
+                                    Размножить класс
+                                </a>
+                                <a class="dropdown-item" th:href="@{'/classes/delete/' + ${classDto.id}}">
+                                    Удалить класс
+                                </a>
+                                <a class="dropdown-item" th:href="@{'/classes/deleteTeacher/' + ${classDto.id}}">
+                                    Удалить учителя
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${teacherIdToAdd != null || studentIdToAdd != null}">
+                            <a class="btn btn-dark"
+                               th:href="@{${teacherIdToAdd != null ? 'classes/add_teacher/' + teacherIdToAdd
+                               + '?classIdToAdd=' + classDto.id : '/classes/add_student/' + studentIdToAdd
+                               + '?classIdToAdd=' + classDto.id}}">
+                                Добавить в класс
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</html>

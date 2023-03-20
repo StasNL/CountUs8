@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список учителей</title>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}" type="text/css">
+</head>
+<body>
+<div class="container-fluid text-center">
+    <h2>Список учителей</h2>
+    <div class="text-left ml-2">
+        <a class="btn btn-info text-white" onclick="history.back(); return false;">Назад</a>
+        <a class="btn btn-info text-white" th:href="@{'/'}">На главную</a>
+    </div>
+    <div class="my-2 row align-items-center">
+        <div class="col-m offset-md-5">
+            <a th:if="${classIdToAdd == null}" class="h3 btn btn-dark btn-lg " th:href="@{/teachers/new}">Добавить учителя</a>
+        </div>
+        <div class="col-m offset-md-3">
+            <form th:action="@{/teachers}">
+                <input type="submit" value="Старт">
+                &nbsp;
+                <input type="text" name="filter" placeholder="Поиск">
+
+            </form>
+        </div>
+    </div>
+    <div th:if="${message}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+    <div>
+        <table class="table table-bordered table-sm">
+            <thead class="thead-dark">
+            <tr>
+                <th>
+                    <a th:href="@{'/teachers' + '?sortBy=surname&sortDir=' + ${reverseSortDir}
+                    + '&prevSort=' + ${prevSort} + ${filter != null ? '&filter=' + filter : ''}}"
+                       class="btn btn-dark btn-block">
+                        Фамилия
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{'/teachers' + '?sortBy=name&sortDir=' + ${reverseSortDir} + '&prevSort='
+                     + ${prevSort} + ${filter != null ? '&filter=' + filter : ''}}"
+                       class="btn btn-dark btn-block">
+                        Имя
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{'/teachers' + '?sortBy=patronymic&sortDir=' + ${reverseSortDir}
+                    + '&prevSort=' + ${prevSort} + ${filter != null ? '&filter=' + filter : ''}}"
+                       class="btn btn-dark btn-block">
+                        Отчество
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{'/teachers' + '?sortBy=birthYear&sortDir=' + ${reverseSortDir}
+                     + '&prevSort=' + ${prevSort}  + ${filter != null ? '&filter=' + filter : ''}}"
+                       class="btn btn-dark btn-block">
+                        Год рождения
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{'/teachers' + '?sortBy=gender&sortDir=' + ${reverseSortDir}
+                     + '&prevSort=' + ${prevSort} + ${filter != null ? '&filter=' + filter : ''}}"
+                       class="btn btn-dark btn-block">
+                        Пол
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{'/teachers' + '?sortBy=patronymic&sortDir=' + ${reverseSortDir}
+                    + '&prevSort=' + ${prevSort} + ${filter != null ? '&filter=' + filter : ''}}"
+                       class="btn btn-dark btn-block">
+                        Предмет
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="teacherDto : ${teachers}">
+
+                <tr>
+                    <td th:width="200">[[${teacherDto.surname}]]</td>
+                    <td th:width="200">[[${teacherDto.name}]]</td>
+                    <td th:width="200">[[${teacherDto.patronymic}]]</td>
+                    <td th:width="200">[[${teacherDto.birthYear}]]</td>
+                    <td th:width="150">[[${teacherDto.gender}]]</td>
+                    <td th:width="200">[[${teacherDto.mainSubject}]]</td>
+                    <td th:width="300">
+                        <div th:if="${classIdToAdd == null}" class="dropdown">
+                            <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown">
+                                Меню
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item"
+                                   th:href="@{${classIdToAdd != null ? '/classes/add_teacher/' + teacherDto.id
+                                + '?classIdToAdd=' + classIdToAdd : '/classes?teacherIdToAdd=' + teacherDto.id}}">
+                                    Сделать классным руководителем
+                                </a>
+                                <a class="dropdown-item" th:href="@{'/teachers/duplicate/' + ${teacherDto.id}}">
+                                    Размножить
+                                </a>
+                                <a class="dropdown-item" th:href="@{'/teachers/delete/' + ${teacherDto.id}}">
+                                    Удалить
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${classIdToAdd != null}">
+                            <a class="btn btn-dark" th:href="@{'/classes/add_teacher/' + ${teacherDto.id}
+                                + '?classIdToAdd=' + ${classIdToAdd}}">
+                                Добавить в класс
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</html>
